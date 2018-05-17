@@ -1,37 +1,19 @@
 import React, { Component } from 'react';
 import './index.css';
-import GuestList from './guestList';
-import Counter from './counter';
-import Header from "./header";
-
+import Header from './Header/index';
+import MainContent from './MainContent/index';
 
 class App extends Component {
   state = {
     isFiltered: false,
     pendingGuest: '',
-    guests: [
-      {
-        name: 'Treasure',
-        isConfirmed: true,
-        isEditing: false,
-      },
-      {
-        name: 'Nic',
-        isConfirmed: true,
-        isEditing: false,
-      },
-      {
-        name: 'koory',
-        isConfirmed: true,
-        isEditing: true,
-      },
-    ],
+    guests: [],
   };
 
-  toggleGuestPropertyAt = (property, indexToChange) =>
+  toggleGuestPropertyAt = (property, rightGuest) =>
     this.setState({
-      guests: this.state.guests.map((guest, index) => {
-        if (index === indexToChange) {
+      guests: this.state.guests.map( guest => {
+        if (guest.id === rightGuest) {
           return {
             ...guest,
 
@@ -42,16 +24,13 @@ class App extends Component {
       }),
     });
 
-  toggleConfirmationAt = index =>
-    this.toggleGuestPropertyAt('isConfirmed', index);
-  removeGuestAt = index =>
+  toggleConfirmationAt = rightGuest =>
+    this.toggleGuestPropertyAt('isConfirmed', rightGuest);
+  removeGuestAt = rightGuest =>
     this.setState({
-      guests: [
-        ...this.state.guests.slice(0, index),
-        ...this.state.guests.slice(index + 1),
-      ],
+      guests: this.state.guests.filter(guest => rightGuest !== guest.id)
     });
-  toggleEditingAt = index => this.toggleGuestPropertyAt('isEditing', index);
+  toggleEditingAt = rightGuest => this.toggleGuestPropertyAt('isEditing', rightGuest);
 
   setNameAt = (name, indexToChange) =>
     this.setState({
@@ -77,10 +56,12 @@ class App extends Component {
 
   newGuestSubmitHandler = e => {
     e.preventDefault();
+
     this.setState({
       guests: [
         {
           name: this.state.pendingGuest,
+          id:this.state.pendingGuest,
           isConfirmed: false,
           isEditing: false,
         },
@@ -110,36 +91,26 @@ class App extends Component {
     const totalUnConfirmed = totalInvited - totalConfirmed;
     return (
       <div className="App">
-        <Header newGuestSubmitHandler={this.newGuestSubmitHandler}
-                handleNameInput={this.handleNameInput}
-                pendingGuest={this.state.pendingGuest}/>
-        <div className="main">
-          <div>
-            <h2>Invitees</h2>
-            <label>
-              <input
-                type="checkbox"
-                onChange={this.toggleFilter}
-                checked={this.state.isFiltered}
-              />{' '}
-              Hide those who haven't responded
-            </label>
-          </div>
-          <Counter
-            TotalInvited={totalInvited}
-            numberAttending={totalConfirmed}
-            numberUnconfirmed={totalUnConfirmed}
-          />
-          <GuestList
-            guests={this.state.guests}
-            toggleConfirmationAt={this.toggleConfirmationAt}
-            toggleEditingAt={this.toggleEditingAt}
-            setNameAt={this.setNameAt}
-            isFiltered={this.state.isFiltered}
-            removeGuestAt={this.removeGuestAt}
-            pendingGuest={this.state.pendingGuest}
-          />
-        </div>
+        <Header
+          newGuestSubmitHandler={this.newGuestSubmitHandler}
+          handleNameInput={this.handleNameInput}
+          pendingGuest={this.state.pendingGuest}
+        />
+
+        <MainContent
+          guests={this.state.guests}
+          toggleFilter={this.toggleFilter}
+          isFiltered={this.state.isFiltered}
+          TotalInvited={totalInvited}
+          numberAttending={totalConfirmed}
+          numberUnconfirmed={totalUnConfirmed}
+          isConfirmed={this.state.isConfirmed}
+          pendingGuest={this.state.pendingGuest}
+          removeGuestAt={this.removeGuestAt}
+          setNameAt={this.setNameAt}
+          toggleConfirmationAt={this.toggleConfirmationAt}
+          toggleEditingAt={this.toggleEditingAt}
+        />
       </div>
     );
   }

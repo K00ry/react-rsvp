@@ -7,23 +7,23 @@ const Counter = props =>
         <tbody>
         <tr>
             <td>Attending:</td>
-            <td>{props.numberAttending}</td>
+            <td>{props.numberAttendingAt}</td>
         </tr>
         <tr>
             <td>Unconfirmed:</td>
-            <td>{props.numberUnconfirmed}</td>
+            <td>{props.numberUnconfirmedAt}</td>
         </tr>
         <tr>
             <td>Total:</td>
-            <td>{props.TotalInvited}</td>
+            <td> {props.TotalInvitedAt}</td>
         </tr>
         </tbody>
     </table>
 
 Counter.propTypes = {
-    numberAttending : PropTypes.number,
-    numberUnconfirmed :PropTypes.number,
-    TotalInvited :PropTypes.number,
+    TotalInvitedAt : PropTypes.number,
+    numberAttendingAt :PropTypes.number,
+    numberUnconfirmedAt :PropTypes.number,
 
 
 };
